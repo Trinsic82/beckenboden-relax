@@ -1,0 +1,11 @@
+{
+  "name": "beckenboden-relax",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  },
+  "forwardPorts": [5173, 8090],
+  "postCreateCommand": "npm install"
+}

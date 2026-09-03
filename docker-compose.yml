@@ -1,0 +1,7 @@
+services:
+  beckenboden-relax:
+    build: .
+    container_name: beckenboden-relax
+    ports:
+      - "8090:80"
+    restart: unless-stopped
