@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import WaveBreath from '$lib/WaveBreath.svelte';
+  import BackLink from '$lib/BackLink.svelte';
+  import SessionProgress from '$lib/SessionProgress.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
   import { goto } from '$app/navigation';
@@ -15,6 +17,8 @@
 </script>
 
 <div class="page">
+  <BackLink />
+  <SessionProgress />
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
   <WaveBreath
