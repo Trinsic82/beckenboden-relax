@@ -1,9 +1,13 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import SquareBreath from '$lib/SquareBreath.svelte';
   import { exercises } from '$lib/exercises';
+  import { setupWakeLock } from '$lib/wakeLock';
   import { goto } from '$app/navigation';
 
   const exercise = exercises[4];
+
+  onMount(() => setupWakeLock());
 
   function handleComplete() {
     goto('/abschluss');

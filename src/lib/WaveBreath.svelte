@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
 
-  let { inhale = 4, hold = 2, exhale = 7, durationSeconds = 180, onComplete = () => {} } = $props();
+  let { inhale = 4, hold = 2, exhale = 7, durationSeconds = 90, onComplete = () => {} } = $props();
 
   let phase = $state<'inhale' | 'hold' | 'exhale'>('inhale');
   let phaseSeconds = $state(untrack(() => inhale));

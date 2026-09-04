@@ -1,9 +1,13 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import SinkingDrop from '$lib/SinkingDrop.svelte';
   import { exercises } from '$lib/exercises';
+  import { setupWakeLock } from '$lib/wakeLock';
   import { goto } from '$app/navigation';
 
   const exercise = exercises[1];
+
+  onMount(() => setupWakeLock());
 
   function handleComplete() {
     goto('/uebung-3');
