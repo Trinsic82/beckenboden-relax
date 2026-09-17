@@ -1,5 +1,10 @@
 <script lang="ts">
   import { exercises } from '$lib/exercises';
+  import { unlockAudio } from '$lib/audio';
+
+  function handleStart() {
+    unlockAudio();
+  }
 </script>
 
 <div class="page">
@@ -8,12 +13,12 @@
   <ul class="list">
     {#each exercises as exercise, i}
       <li>
-        <a href="/uebung-{i + 1}">{exercise.title}</a>
+        <a href="/uebung-{i + 1}" onclick={handleStart}>{exercise.title}</a>
       </li>
     {/each}
   </ul>
 
-  <a href="/uebung-1" class="start">Session starten</a>
+  <a href="/uebung-1" class="start" onclick={handleStart}>Session starten</a>
 </div>
 
 <style>

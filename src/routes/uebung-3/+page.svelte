@@ -26,6 +26,7 @@
     hold={exercise.hold}
     exhale={exercise.exhale}
     durationSeconds={exercise.durationSeconds}
+    introKey={exercise.id}
     onComplete={handleComplete}
   />
 </div>

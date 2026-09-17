@@ -1,7 +1,8 @@
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { playAudio } from '$lib/audio';
 
-  let { contract = 3, hold = 3, exhale = 13, durationSeconds = 90, onComplete = () => {} } = $props();
+  let { contract = 3, hold = 3, exhale = 13, durationSeconds = 90, introKey = '', onComplete = () => {} } = $props();
   const release = exhale;
 
   let phase = $state<'contract' | 'hold' | 'release'>('contract');
@@ -9,8 +10,11 @@
   let elapsed = $state(0);
   let translateY = $state(60);
   let opacity = $state(0.3);
+  let hasStarted = false;
+  let running = $state(false);
 
-  const phaseLabel = { contract: 'Sanft anspannen …', hold: 'Halten …', release: 'Loslassen und sinken lassen …' };
+  const phaseLabel = { contract: 'Sanft anspannen', hold: 'Halten', release: 'Loslassen und sinken lassen' };
+  const phaseAudioKey = { contract: 'anspannen', hold: 'halten', release: 'loslassen' };
 
   function nextPhase() {
     if (phase === 'contract') {
@@ -23,6 +27,7 @@
       phase = 'contract';
       phaseSeconds = contract;
     }
+    playAudio(phaseAudioKey[phase]);
   }
 
   $effect(() => {
@@ -34,6 +39,22 @@
   });
 
   $effect(() => {
+    if (!hasStarted) {
+      hasStarted = true;
+      if (introKey) {
+        playAudio(`intro-${introKey}`).then(() => {
+          playAudio(phaseAudioKey[phase]);
+          running = true;
+        });
+      } else {
+        playAudio(phaseAudioKey[phase]);
+        running = true;
+      }
+    }
+  });
+
+  $effect(() => {
+    if (!running) return;
     const tick = setInterval(() => {
       elapsed += 1;
       phaseSeconds -= 1;
@@ -57,7 +78,7 @@
   <div class="track">
     <div class="drop" style="transform: translateY({translateY}px); opacity: {opacity}; transition-duration: {transitionDuration}s;"></div>
   </div>
-  <p class="label">{phaseLabel[phase]}</p>
+  <p class="label">{phaseLabel[phase]} …</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 

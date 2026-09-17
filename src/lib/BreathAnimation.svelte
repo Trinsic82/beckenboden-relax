@@ -1,14 +1,18 @@
 <script lang="ts">
   import { untrack } from 'svelte';
+  import { playAudio } from '$lib/audio';
 
-  let { inhale = 4, hold = 0, exhale = 6, durationSeconds = 180, onComplete = () => {} } = $props();
+  let { inhale = 4, hold = 0, exhale = 6, durationSeconds = 180, introKey = '', onComplete = () => {} } = $props();
 
   let phase = $state<'inhale' | 'hold' | 'exhale'>('inhale');
   let phaseSeconds = $state(untrack(() => inhale));
   let elapsed = $state(0);
   let scale = $state(0.6);
+  let hasStarted = false;
+  let running = $state(false);
 
-  const phaseLabel = { inhale: 'Einatmen …', hold: 'Halten …', exhale: 'Ausatmen …' };
+  const phaseLabel = { inhale: 'Einatmen', hold: 'Halten', exhale: 'Ausatmen' };
+  const phaseAudioKey = { inhale: 'einatmen', hold: 'halten', exhale: 'ausatmen' };
 
   function nextPhase() {
     if (phase === 'inhale') {
@@ -21,6 +25,7 @@
       phase = 'inhale';
       phaseSeconds = inhale;
     }
+    playAudio(phaseAudioKey[phase]);
   }
 
   $effect(() => {
@@ -32,6 +37,22 @@
   });
 
   $effect(() => {
+    if (!hasStarted) {
+      hasStarted = true;
+      if (introKey) {
+        playAudio(`intro-${introKey}`).then(() => {
+          playAudio(phaseAudioKey[phase]);
+          running = true;
+        });
+      } else {
+        playAudio(phaseAudioKey[phase]);
+        running = true;
+      }
+    }
+  });
+
+  $effect(() => {
+    if (!running) return;
     const tick = setInterval(() => {
       elapsed += 1;
       phaseSeconds -= 1;
@@ -55,7 +76,7 @@
     class="circle"
     style="transform: scale({scale}); transition-duration: {phase === 'inhale' ? inhale : phase === 'hold' ? 0.3 : exhale}s;"
   ></div>
-  <p class="label">{phaseLabel[phase]}</p>
+  <p class="label">{phaseLabel[phase]} …</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 
