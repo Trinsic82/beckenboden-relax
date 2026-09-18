@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { playAudio } from '$lib/audio';
+  import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
 
   let { contract = 4, hold = 2, exhale = 9, durationSeconds = 90, introKey = '', onComplete = () => {} } = $props();
   const release = exhale;
@@ -40,7 +40,9 @@
   $effect(() => {
     if (!hasStarted) {
       hasStarted = true;
-      if (introKey) {
+      if (consumeInitialAudioPlayed(phaseAudioKey[phase])) {
+        running = true;
+      } else if (introKey) {
         playAudio(`intro-${introKey}`).then(() => {
           playAudio(phaseAudioKey[phase]);
           running = true;

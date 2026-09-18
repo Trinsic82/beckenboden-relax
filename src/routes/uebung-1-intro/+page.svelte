@@ -9,5 +9,6 @@
   title={exercise.title}
   description={exercise.description}
   introKey={exercise.id}
+  firstAudioKey="einatmen"
   nextHref="/uebung-1"
 />
