@@ -12,7 +12,7 @@
 <div class="page">
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
-  <MetronomeSideSway tempoMs={1100} durationSeconds={exercise.durationSeconds} onComplete={() => goto('/uebung-8-intro')} />
+  <MetronomeSideSway tempoMs={700} durationSeconds={exercise.durationSeconds} onComplete={() => goto('/uebung-8-intro')} />
 </div>
 
 <style>
