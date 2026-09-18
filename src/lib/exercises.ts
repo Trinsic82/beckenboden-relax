@@ -53,5 +53,32 @@ export const exercises: Exercise[] = [
     hold: 7,
     exhale: 8,
     durationSeconds: 60
+  },
+  {
+    id: 'zwerchfell-triggern',
+    title: 'Übung 6: Zwerchfell-Triggerung',
+    description: 'Trigger dein Zwerchfell abwechselnd links und rechts am Rippenbogen mit ruhiger, geführter Anleitung.',
+    inhale: 4,
+    hold: 10,
+    exhale: 2,
+    durationSeconds: 100
+  },
+  {
+    id: 'knie-wackeln',
+    title: 'Übung 7: Knie wackeln',
+    description: 'Lege dich auf den Rücken, halte die Knie zusammen und wackle zwei Minuten lang ruhig im Takt nach links und rechts.',
+    inhale: 0,
+    hold: 0,
+    exhale: 0,
+    durationSeconds: 120
+  },
+  {
+    id: 'becken-trampolin',
+    title: 'Übung 8: Becken-Trampolin',
+    description: 'Hebe dein Becken leicht an und fedre es in einem schnellen, gleichmäßigen Takt wieder ab.',
+    inhale: 0,
+    hold: 0,
+    exhale: 0,
+    durationSeconds: 75
   }
 ];

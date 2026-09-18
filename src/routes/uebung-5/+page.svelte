@@ -12,7 +12,7 @@
   onMount(() => setupWakeLock());
 
   function handleComplete() {
-    goto('/abschluss');
+    goto('/uebung-6-intro');
   }
 </script>
 

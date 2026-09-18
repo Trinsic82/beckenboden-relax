@@ -1,18 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import RibCageTrigger from '$lib/RibCageTrigger.svelte';
+  import MetronomeBounce from '$lib/MetronomeBounce.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
 
-  const exercise = exercises[5];
+  const exercise = exercises[7];
   onMount(() => setupWakeLock());
 </script>
 
 <div class="page">
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
-  <RibCageTrigger onComplete={() => goto('/uebung-7-intro')} />
+  <MetronomeBounce tempoMs={600} durationSeconds={exercise.durationSeconds} onComplete={() => goto('/abschluss')} />
 </div>
 
 <style>

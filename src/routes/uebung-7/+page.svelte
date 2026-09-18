@@ -1,37 +1,22 @@
 <script lang="ts">
-  import BreathAnimation from '$lib/BreathAnimation.svelte';
-  import { exercises } from '$lib/exercises';
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import MetronomeSideSway from '$lib/MetronomeSideSway.svelte';
+  import { exercises } from '$lib/exercises';
+  import { setupWakeLock } from '$lib/wakeLock';
 
   const exercise = exercises[6];
-
-  function handleComplete() {
-    goto('/abschluss');
-  }
+  onMount(() => setupWakeLock());
 </script>
 
 <div class="page">
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
-  <BreathAnimation
-    inhale={exercise.inhale}
-    hold={exercise.hold}
-    exhale={exercise.exhale}
-    durationSeconds={exercise.durationSeconds}
-    onComplete={handleComplete}
-  />
+  <MetronomeSideSway tempoMs={1100} durationSeconds={exercise.durationSeconds} onComplete={() => goto('/uebung-8-intro')} />
 </div>
 
 <style>
-  .page {
-    min-height: 100vh;
-    background: #0f172a;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    font-family: system-ui, sans-serif;
-  }
-  h1 { color: #f8fafc; font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; }
-  .desc { color: #94a3b8; max-width: 320px; text-align: center; margin-bottom: 2rem; }
+  .page { min-height:100vh; background:#0f172a; display:flex; flex-direction:column; align-items:center; padding:2rem 1rem; font-family:system-ui,sans-serif; }
+  h1 { color:#f8fafc; font-size:1.5rem; margin-bottom:.5rem; text-align:center; }
+  .desc { color:#94a3b8; max-width:320px; text-align:center; margin-bottom:2rem; }
 </style>
