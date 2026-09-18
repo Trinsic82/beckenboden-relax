@@ -15,8 +15,8 @@
 
   function startExercise() {
     markInitialAudioPlayed(firstAudioKey);
-    void goto(nextHref);
     void playAudio(firstAudioKey);
+    void goto(nextHref);
   }
 </script>
 
