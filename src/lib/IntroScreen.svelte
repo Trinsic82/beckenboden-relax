@@ -1,16 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { markInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { playAudio } from '$lib/audio';
   import BackLink from '$lib/BackLink.svelte';
 
-  let { title, description, introKey, firstAudioKey, nextHref } = $props();
+  let { title, description, introKey, nextHref } = $props();
 
   onMount(() => {
     playAudio(`intro-${introKey}`).then(() => {
-      return playAudio(firstAudioKey);
-    }).then(() => {
-      markInitialAudioPlayed(firstAudioKey);
       goto(nextHref);
     });
   });
