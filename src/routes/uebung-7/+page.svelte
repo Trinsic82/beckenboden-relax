@@ -4,6 +4,7 @@
   import MetronomeSideSway from '$lib/MetronomeSideSway.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
+  import { getNextExerciseHref } from '$lib/session';
 
   const exercise = exercises[6];
   onMount(() => setupWakeLock());
@@ -12,7 +13,7 @@
 <div class="page">
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
-  <MetronomeSideSway tempoMs={700} durationSeconds={exercise.durationSeconds} onComplete={() => goto('/uebung-8-intro')} />
+  <MetronomeSideSway tempoMs={700} durationSeconds={exercise.durationSeconds} onComplete={() => goto(getNextExerciseHref(6))} />
 </div>
 
 <style>

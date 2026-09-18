@@ -4,6 +4,7 @@
   import RibCageTrigger from '$lib/RibCageTrigger.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
+  import { getNextExerciseHref } from '$lib/session';
 
   const exercise = exercises[5];
   onMount(() => setupWakeLock());
@@ -12,7 +13,7 @@
 <div class="page">
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
-  <RibCageTrigger onComplete={() => goto('/uebung-7-intro')} />
+  <RibCageTrigger onComplete={() => goto(getNextExerciseHref(5))} />
 </div>
 
 <style>

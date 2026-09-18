@@ -6,13 +6,14 @@
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
   import { goto } from '$app/navigation';
+  import { getNextExerciseHref } from '$lib/session';
 
   const exercise = exercises[4];
 
   onMount(() => setupWakeLock());
 
   function handleComplete() {
-    goto('/uebung-6-intro');
+    goto(getNextExerciseHref(4));
   }
 </script>
 

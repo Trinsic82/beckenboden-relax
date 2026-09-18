@@ -1,14 +1,16 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { totalSessionSeconds, getSessionStart } from '$lib/session';
+  import { getSessionStart, getTotalSessionSeconds } from '$lib/session';
 
   let { reset = false } = $props();
 
   let elapsed = $state(0);
+  let total = $state(0);
   let interval: ReturnType<typeof setInterval>;
 
   onMount(() => {
     const start = getSessionStart(reset);
+    total = getTotalSessionSeconds();
     function tick() {
       elapsed = Math.floor((Date.now() - start) / 1000);
     }
@@ -18,7 +20,7 @@
 
   onDestroy(() => clearInterval(interval));
 
-  const remaining = $derived(Math.max(totalSessionSeconds - elapsed, 0));
+  const remaining = $derived(Math.max(total - elapsed, 0));
   const elapsedM = $derived(Math.floor(elapsed / 60));
   const elapsedS = $derived(elapsed % 60);
   const remainingM = $derived(Math.floor(remaining / 60));

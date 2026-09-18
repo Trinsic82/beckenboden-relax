@@ -4,6 +4,7 @@
   import MetronomeBounce from '$lib/MetronomeBounce.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
+  import { getNextExerciseHref } from '$lib/session';
 
   const exercise = exercises[7];
   onMount(() => setupWakeLock());
@@ -12,7 +13,7 @@
 <div class="page">
   <h1>{exercise.title}</h1>
   <p class="desc">{exercise.description}</p>
-  <MetronomeBounce tempoMs={600} durationSeconds={exercise.durationSeconds} onComplete={() => goto('/abschluss')} />
+  <MetronomeBounce tempoMs={600} durationSeconds={exercise.durationSeconds} onComplete={() => goto(getNextExerciseHref(7))} />
 </div>
 
 <style>
