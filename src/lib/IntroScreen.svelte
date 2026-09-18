@@ -1,14 +1,16 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { playAudio } from '$lib/audio';
+  import { markInitialAudioPlayed, playAudio } from '$lib/audio';
   import BackLink from '$lib/BackLink.svelte';
-  import SessionProgress from '$lib/SessionProgress.svelte';
 
-  let { title, description, introKey, nextHref, resetProgress = false } = $props();
+  let { title, description, introKey, firstAudioKey, nextHref } = $props();
 
   onMount(() => {
     playAudio(`intro-${introKey}`).then(() => {
+      return playAudio(firstAudioKey);
+    }).then(() => {
+      markInitialAudioPlayed(firstAudioKey);
       goto(nextHref);
     });
   });
@@ -16,7 +18,6 @@
 
 <div class="page">
   <BackLink />
-  <SessionProgress reset={resetProgress} />
   <h1>{title}</h1>
   <p class="desc">{description}</p>
   <div class="pulse"></div>
