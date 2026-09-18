@@ -13,20 +13,15 @@ const ALL_KEYS = [
   'intro-4-7-8-atmung'
 ];
 
-function getAudio(key: string): HTMLAudioElement {
-  let audio = cache[key];
-  if (!audio) {
-    audio = new Audio(`/audio/${key}.mp3`);
-    cache[key] = audio;
-  }
-  return audio;
-}
-
 export function playAudio(key: string): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve();
 
   return new Promise((resolve) => {
-    const audio = getAudio(key);
+    let audio = cache[key];
+    if (!audio) {
+      audio = new Audio(`/audio/${key}.mp3`);
+      cache[key] = audio;
+    }
     audio.currentTime = 0;
 
     const onEnded = () => {
@@ -45,17 +40,13 @@ export function playAudio(key: string): Promise<void> {
 export function unlockAudio() {
   if (typeof window === 'undefined') return;
   for (const key of ALL_KEYS) {
-    const audio = getAudio(key);
-    audio.volume = 0;
-    audio
+    const dummy = new Audio(`/audio/${key}.mp3`);
+    dummy.volume = 0;
+    dummy
       .play()
       .then(() => {
-        audio.pause();
-        audio.currentTime = 0;
-        audio.volume = 1;
+        dummy.pause();
       })
-      .catch(() => {
-        audio.volume = 1;
-      });
+      .catch(() => {});
   }
 }
