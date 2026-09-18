@@ -1,18 +1,5 @@
 const cache: Record<string, HTMLAudioElement> = {};
 
-const ALL_KEYS = [
-  'einatmen',
-  'ausatmen',
-  'halten',
-  'anspannen',
-  'loslassen',
-  'intro-zwerchfellatmung',
-  'intro-wellen-loslassen',
-  'intro-reverse-kegel',
-  'intro-anspannen-loslassen',
-  'intro-4-7-8-atmung'
-];
-
 export function playAudio(key: string): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve();
 
@@ -39,14 +26,12 @@ export function playAudio(key: string): Promise<void> {
 
 export function unlockAudio() {
   if (typeof window === 'undefined') return;
-  for (const key of ALL_KEYS) {
-    const dummy = new Audio(`/audio/${key}.mp3`);
-    dummy.volume = 0;
-    dummy
-      .play()
-      .then(() => {
-        dummy.pause();
-      })
-      .catch(() => {});
-  }
+  const a = new Audio('/audio/einatmen.mp3');
+  a.volume = 0;
+  a.play()
+    .then(() => {
+      a.pause();
+      a.currentTime = 0;
+    })
+    .catch(() => {});
 }
