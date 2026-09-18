@@ -41,6 +41,7 @@ export function playAudio(key: string): Promise<void> {
       activeAudio.currentTime = 0;
     }
     activeAudio = audio;
+    audio.pause();
     audio.currentTime = 0;
 
     const onEnded = () => {
