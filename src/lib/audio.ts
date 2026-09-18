@@ -1,4 +1,5 @@
 const cache: Record<string, HTMLAudioElement> = {};
+let activeAudio: HTMLAudioElement | undefined;
 
 const ALL_KEYS = [
   'einatmen',
@@ -35,16 +36,32 @@ export function playAudio(key: string): Promise<void> {
 
   return new Promise((resolve) => {
     const audio = getAudio(key);
+    if (activeAudio && activeAudio !== audio) {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+    }
+    activeAudio = audio;
     audio.currentTime = 0;
 
     const onEnded = () => {
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
+      if (activeAudio === audio) activeAudio = undefined;
       resolve();
     };
-    audio.addEventListener('ended', onEnded);
+    const onError = () => {
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
+      if (activeAudio === audio) activeAudio = undefined;
+      resolve();
+    };
+    audio.addEventListener('ended', onEnded, { once: true });
+    audio.addEventListener('error', onError, { once: true });
 
     audio.play().catch(() => {
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('error', onError);
+      if (activeAudio === audio) activeAudio = undefined;
       resolve();
     });
   });

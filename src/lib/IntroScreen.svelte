@@ -23,7 +23,7 @@
 </div>
 
 <style>
-  .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; font-family: system-ui, sans-serif; }
+  .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem; font-family: system-ui, sans-serif; }
   h1 { color: #f8fafc; font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; }
   .desc { color: #94a3b8; max-width: 320px; text-align: center; margin-bottom: 2rem; }
   .pulse { width: 60px; height: 60px; border-radius: 50%; background: #1e3a8a; animation: pulse 1.6s ease-in-out infinite; }

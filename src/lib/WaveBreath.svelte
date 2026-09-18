@@ -42,12 +42,14 @@
       hasStarted = true;
       if (introKey) {
         playAudio(`intro-${introKey}`).then(() => {
-          playAudio(phaseAudioKey[phase]);
-          running = true;
+          playAudio(phaseAudioKey[phase]).then(() => {
+            running = true;
+          });
         });
       } else {
-        playAudio(phaseAudioKey[phase]);
-        running = true;
+        playAudio(phaseAudioKey[phase]).then(() => {
+          running = true;
+        });
       }
     }
   });
