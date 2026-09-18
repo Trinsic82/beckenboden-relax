@@ -49,6 +49,7 @@ export function playAudio(key: string): Promise<void> {
     audio.pause();
     audio.currentTime = 0;
     audio.src = `/audio/${key}.mp3`;
+    audio.volume = 1;
 
     const onEnded = () => {
       finish();
@@ -74,16 +75,18 @@ export function playAudio(key: string): Promise<void> {
 export function unlockAudio() {
   if (typeof window === 'undefined') return;
   const a = getPlayer();
-  a.src = '/audio/einatmen.mp3';
+  const source = '/audio/einatmen.mp3';
+  a.src = source;
   a.volume = 0;
   a.load();
   a.play()
     .then(() => {
+      if (!a.src.endsWith(source)) return;
       a.pause();
       a.currentTime = 0;
       a.volume = 1;
     })
     .catch(() => {
-      a.volume = 1;
+      if (a.src.endsWith(source)) a.volume = 1;
     });
 }
