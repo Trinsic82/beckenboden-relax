@@ -1,6 +1,11 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { exercises } from '$lib/exercises';
-  import { unlockAudio } from '$lib/audio';
+  import { unlockAudio, preloadAll } from '$lib/audio';
+
+  onMount(() => {
+    preloadAll();
+  });
 
   function handleStart() {
     unlockAudio();
