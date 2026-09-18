@@ -1,5 +1,6 @@
 const cache: Record<string, HTMLAudioElement> = {};
-let activeAudio: HTMLAudioElement | undefined;
+let player: HTMLAudioElement | undefined;
+let stopActivePlayback: (() => void) | undefined;
 
 const ALL_KEYS = [
   'einatmen',
@@ -24,6 +25,14 @@ function getAudio(key: string): HTMLAudioElement {
   return audio;
 }
 
+function getPlayer(): HTMLAudioElement {
+  if (!player) {
+    player = new Audio();
+    player.preload = 'auto';
+  }
+  return player;
+}
+
 export function preloadAll() {
   if (typeof window === 'undefined') return;
   for (const key of ALL_KEYS) {
@@ -35,43 +44,39 @@ export function playAudio(key: string): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve();
 
   return new Promise((resolve) => {
-    const audio = getAudio(key);
-    if (activeAudio && activeAudio !== audio) {
-      activeAudio.pause();
-      activeAudio.currentTime = 0;
-    }
-    activeAudio = audio;
+    stopActivePlayback?.();
+    const audio = getPlayer();
     audio.pause();
     audio.currentTime = 0;
+    audio.src = `/audio/${key}.mp3`;
 
     const onEnded = () => {
-      audio.removeEventListener('ended', onEnded);
-      audio.removeEventListener('error', onError);
-      if (activeAudio === audio) activeAudio = undefined;
-      resolve();
+      finish();
     };
     const onError = () => {
+      finish();
+    };
+    const finish = () => {
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
-      if (activeAudio === audio) activeAudio = undefined;
+      if (stopActivePlayback === finish) stopActivePlayback = undefined;
       resolve();
     };
+    stopActivePlayback = finish;
     audio.addEventListener('ended', onEnded, { once: true });
     audio.addEventListener('error', onError, { once: true });
 
-    audio.play().catch(() => {
-      audio.removeEventListener('ended', onEnded);
-      audio.removeEventListener('error', onError);
-      if (activeAudio === audio) activeAudio = undefined;
-      resolve();
-    });
+    audio.load();
+    audio.play().catch(finish);
   });
 }
 
 export function unlockAudio() {
   if (typeof window === 'undefined') return;
-  const a = getAudio('einatmen');
+  const a = getPlayer();
+  a.src = '/audio/einatmen.mp3';
   a.volume = 0;
+  a.load();
   a.play()
     .then(() => {
       a.pause();
