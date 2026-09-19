@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { goto } from '$app/navigation';
   import { getSessionStart, getTotalSessionSeconds } from '$lib/session';
 
   let { reset = false } = $props();
@@ -32,6 +33,8 @@
   <span>Verbleibend: {remainingM}:{remainingS.toString().padStart(2, '0')}</span>
 </div>
 
+<button class="end-button" type="button" onclick={() => goto('/')}>Beenden</button>
+
 <style>
   .session-bar {
     display: flex;
@@ -40,6 +43,18 @@
     max-width: 320px;
     color: #64748b;
     font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .end-button {
+    align-self: center;
+    border: 1px solid #334155;
+    background: transparent;
+    color: #e2e8f0;
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    font: inherit;
+    cursor: pointer;
     margin-bottom: 0.5rem;
   }
 </style>
