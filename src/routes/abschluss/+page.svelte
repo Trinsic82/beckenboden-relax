@@ -1,7 +1,7 @@
 <div class="page">
   <h1>Session abgeschlossen</h1>
   <p class="desc">Du hast alle 8 Übungen durchlaufen. Nimm dir noch einen Moment Zeit, bevor du aufstehst.</p>
-  <a href="/" class="button">Zurück zur Übersicht</a>
+  <a href="/" class="button">Zurück</a>
 </div>
 
 <style>

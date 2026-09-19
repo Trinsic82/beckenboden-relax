@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import BreathAnimation from '$lib/BreathAnimation.svelte';
-  import BackLink from '$lib/BackLink.svelte';
   import SessionProgress from '$lib/SessionProgress.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
@@ -18,7 +17,6 @@
 </script>
 
 <div class="page">
-  <BackLink />
   <SessionProgress reset={true} />
   <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{exercise.description}</p>

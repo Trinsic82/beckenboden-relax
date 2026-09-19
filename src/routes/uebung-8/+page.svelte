@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import MetronomeBounce from '$lib/MetronomeBounce.svelte';
+  import SessionProgress from '$lib/SessionProgress.svelte';
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
   import { getNextExerciseHref } from '$lib/session';
@@ -11,6 +12,7 @@
 </script>
 
 <div class="page">
+  <SessionProgress />
   <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{exercise.description}</p>
   <MetronomeBounce tempoMs={480} durationSeconds={exercise.durationSeconds} onComplete={() => goto(getNextExerciseHref(7))} />

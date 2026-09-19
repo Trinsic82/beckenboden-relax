@@ -2,7 +2,6 @@
   import { onDestroy, onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { markInitialAudioPlayed, playAudio } from '$lib/audio';
-  import BackLink from '$lib/BackLink.svelte';
 
   let { title, description, introKey, firstAudioKey, nextHref } = $props();
   let started = $state(false);
@@ -31,7 +30,6 @@
 </script>
 
 <div class="page">
-  <BackLink />
   <h1>{title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{description}</p>
   <div class="pulse"></div>
