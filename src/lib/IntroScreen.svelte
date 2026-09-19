@@ -1,23 +1,28 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { markInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { markInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
+  import { cancelSpeech } from '$lib/speech';
 
   let { title, description, introKey, firstAudioKey, nextHref } = $props();
   let started = $state(false);
+  let cancelled = false;
   let autoStartTimeout: ReturnType<typeof setTimeout> | undefined;
 
   onMount(() => {
     playAudio(`intro-${introKey}`).then(() => {
-      if (started) return;
+      if (started || cancelled) return;
       autoStartTimeout = setTimeout(() => {
-        startExercise();
+        if (!cancelled) startExercise();
       }, 1000);
     });
   });
 
   onDestroy(() => {
+    cancelled = true;
     if (autoStartTimeout) clearTimeout(autoStartTimeout);
+    stopAllAudio();
+    cancelSpeech();
   });
 
   function startExercise() {

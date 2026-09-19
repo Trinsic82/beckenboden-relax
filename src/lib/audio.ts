@@ -63,6 +63,7 @@ export function stopAllAudio() {
     player.pause();
     player.currentTime = 0;
     player.src = '';
+    player.load();
   }
 }
 

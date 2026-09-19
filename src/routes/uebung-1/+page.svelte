@@ -6,12 +6,16 @@
   import { setupWakeLock } from '$lib/wakeLock';
   import { goto } from '$app/navigation';
   import { getNextExerciseHref } from '$lib/session';
+  import { stopAllAudio } from '$lib/audio';
+  import { cancelSpeech } from '$lib/speech';
 
   const exercise = exercises[0];
 
   onMount(() => setupWakeLock());
 
   function handleComplete() {
+    stopAllAudio();
+    cancelSpeech();
     goto(getNextExerciseHref(0));
   }
 </script>
@@ -27,7 +31,11 @@
     durationSeconds={exercise.durationSeconds}
     onComplete={handleComplete}
   />
-  <button class="end-button" type="button" onclick={() => goto('/')}>Beenden</button>
+  <button class="end-button" type="button" onclick={() => {
+    stopAllAudio();
+    cancelSpeech();
+    goto('/');
+  }}>Beenden</button>
 </div>
 
 <style>

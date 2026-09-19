@@ -1,24 +1,32 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
+  import { cancelSpeech } from '$lib/speech';
 
   let { tempoMs = 880, durationSeconds = 120, onComplete = () => {} } = $props();
-  let side = $state<'left' | 'right'>('left');
+  let position = $state<'left' | 'right'>('left');
   let elapsed = $state(0);
   let running = $state(false);
+  let cancelled = false;
   let interval: ReturnType<typeof setInterval>;
 
   function start() {
-    if (running) return;
+    if (running || cancelled) return;
     running = true;
     playAudio('tick');
     interval = setInterval(() => {
-      side = side === 'left' ? 'right' : 'left';
+      if (cancelled) {
+        clearInterval(interval);
+        return;
+      }
+      position = position === 'left' ? 'right' : 'left';
       elapsed += tempoMs / 1000;
       playAudio('tick');
       if (elapsed >= durationSeconds) {
         clearInterval(interval);
-        playAudio('fertig').then(() => onComplete());
+        playAudio('fertig').then(() => {
+          if (!cancelled) onComplete();
+        });
       }
     }, tempoMs);
   }
@@ -30,13 +38,18 @@
     start();
   });
 
-  onDestroy(() => clearInterval(interval));
+  onDestroy(() => {
+    cancelled = true;
+    clearInterval(interval);
+    stopAllAudio();
+    cancelSpeech();
+  });
   const remaining = $derived(Math.max(durationSeconds - elapsed, 0));
 </script>
 
 <div class="wrapper">
-  <div class="pendulum" class:left={side === 'left'} class:right={side === 'right'}><span></span></div>
-  <p class="label">Knie nach {side === 'left' ? 'links' : 'rechts'}</p>
+  <div class="pendulum" class:left={position === 'left'} class:right={position === 'right'}><span></span></div>
+  <p class="label">Knie nach {position === 'left' ? 'links' : 'rechts'}</p>
   <p class="timer">{Math.floor(remaining / 60)}:{Math.floor(remaining % 60).toString().padStart(2, '0')}</p>
 </div>
 

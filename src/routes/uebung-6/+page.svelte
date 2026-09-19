@@ -6,6 +6,8 @@
   import { exercises } from '$lib/exercises';
   import { setupWakeLock } from '$lib/wakeLock';
   import { getNextExerciseHref } from '$lib/session';
+  import { stopAllAudio } from '$lib/audio';
+  import { cancelSpeech } from '$lib/speech';
 
   const exercise = exercises[5];
   onMount(() => setupWakeLock());
@@ -15,8 +17,16 @@
   <SessionProgress />
   <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{exercise.description}</p>
-  <RibCageTrigger onComplete={() => goto(getNextExerciseHref(5))} />
-  <button class="end-button" type="button" onclick={() => goto('/')}>Beenden</button>
+  <RibCageTrigger onComplete={() => {
+    stopAllAudio();
+    cancelSpeech();
+    goto(getNextExerciseHref(5));
+  }} />
+  <button class="end-button" type="button" onclick={() => {
+    stopAllAudio();
+    cancelSpeech();
+    goto('/');
+  }}>Beenden</button>
 </div>
 
 <style>

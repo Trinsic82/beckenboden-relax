@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
-  import { speak, unlockSpeech } from '$lib/speech';
+  import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
+  import { cancelSpeech, speak, unlockSpeech } from '$lib/speech';
 
   let { onComplete = () => {} } = $props();
   let side = $state<'left' | 'right'>('left');
@@ -18,6 +18,7 @@
   }
 
   async function command(key: string, milliseconds: number) {
+    if (cancelled) return;
     stepLabel = key === 'hand-linker-rippenbogen' ? 'Linke Hand am Rippenbogen' :
       key === 'hand-rechter-rippenbogen' ? 'Rechte Hand am Rippenbogen' :
       key === 'tief-einatmen' ? 'Tief einatmen' :
@@ -25,50 +26,64 @@
       key === 'halten-10-sekunden' ? '10 Sekunden halten' : 'Weiter';
     announce(stepLabel);
     await Promise.all([playAudio(key), wait(milliseconds)]);
+    if (cancelled) return;
   }
 
   async function runSide(currentSide: 'left' | 'right') {
+    if (cancelled) return;
     side = currentSide;
     await command(currentSide === 'left' ? 'hand-linker-rippenbogen' : 'hand-rechter-rippenbogen', 2500);
+    if (cancelled) return;
     for (let currentRepetition = 1; currentRepetition <= 3; currentRepetition += 1) {
       if (cancelled) return;
       repetition = currentRepetition;
       await command('tief-einatmen', 4000);
+      if (cancelled) return;
       await command('ausatmen-tiefer-eindruecken', 2000);
+      if (cancelled) return;
       await command('halten-10-sekunden', 10000);
+      if (cancelled) return;
       stepLabel = 'Kurze Pause';
       announce(stepLabel);
       await wait(2000);
+      if (cancelled) return;
     }
   }
 
   async function run() {
-    if (running) return;
+    if (running || cancelled) return;
     running = true;
     announce('Bereit machen');
     const firstAudioAlreadyPlayed = consumeInitialAudioPlayed('hand-linker-rippenbogen');
     if (firstAudioAlreadyPlayed) {
       side = 'left';
       await wait(2500);
+      if (cancelled) return;
       for (let currentRepetition = 1; currentRepetition <= 3; currentRepetition += 1) {
         if (cancelled) return;
         repetition = currentRepetition;
         await command('tief-einatmen', 4000);
+        if (cancelled) return;
         await command('ausatmen-tiefer-eindruecken', 2000);
+        if (cancelled) return;
         await command('halten-10-sekunden', 10000);
+        if (cancelled) return;
         stepLabel = 'Kurze Pause';
         announce(stepLabel);
         await wait(2000);
+        if (cancelled) return;
       }
     } else {
       await runSide('left');
     }
     if (cancelled) return;
     await command('seite-wechseln', 2500);
+    if (cancelled) return;
     await runSide('right');
     if (cancelled) return;
     stepLabel = 'Fertig';
     await playAudio('fertig');
+    if (cancelled) return;
     onComplete();
   }
 
@@ -78,6 +93,8 @@
 
   onDestroy(() => {
     cancelled = true;
+    stopAllAudio();
+    cancelSpeech();
   });
 </script>
 

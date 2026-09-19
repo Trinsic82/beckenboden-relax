@@ -1,24 +1,32 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
+  import { cancelSpeech } from '$lib/speech';
 
   let { tempoMs = 480, durationSeconds = 75, onComplete = () => {} } = $props();
   let position = $state<'up' | 'down'>('down');
   let elapsed = $state(0);
   let running = $state(false);
+  let cancelled = false;
   let interval: ReturnType<typeof setInterval>;
 
   function start() {
-    if (running) return;
+    if (running || cancelled) return;
     running = true;
     playAudio('tick');
     interval = setInterval(() => {
+      if (cancelled) {
+        clearInterval(interval);
+        return;
+      }
       position = position === 'up' ? 'down' : 'up';
       elapsed += tempoMs / 1000;
       playAudio('tick');
       if (elapsed >= durationSeconds) {
         clearInterval(interval);
-        playAudio('fertig').then(() => onComplete());
+        playAudio('fertig').then(() => {
+          if (!cancelled) onComplete();
+        });
       }
     }, tempoMs);
   }
@@ -30,7 +38,12 @@
     start();
   });
 
-  onDestroy(() => clearInterval(interval));
+  onDestroy(() => {
+    cancelled = true;
+    clearInterval(interval);
+    stopAllAudio();
+    cancelSpeech();
+  });
   const remaining = $derived(Math.max(durationSeconds - elapsed, 0));
 </script>
 

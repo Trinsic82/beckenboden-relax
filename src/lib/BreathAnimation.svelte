@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
-  import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { onDestroy, untrack } from 'svelte';
+  import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
+  import { cancelSpeech } from '$lib/speech';
 
   let { inhale = 4, hold = 0, exhale = 6, durationSeconds = 180, introKey = '', onComplete = () => {} } = $props();
 
@@ -10,11 +11,13 @@
   let scale = $state(0.6);
   let hasStarted = false;
   let running = $state(false);
+  let cancelled = false;
 
   const phaseLabel = { inhale: 'Einatmen', hold: 'Halten', exhale: 'Ausatmen' };
   const phaseAudioKey = { inhale: 'einatmen', hold: 'halten', exhale: 'ausatmen' };
 
   function nextPhase() {
+    if (cancelled) return;
     if (phase === 'inhale') {
       phase = hold > 0 ? 'hold' : 'exhale';
       phaseSeconds = hold > 0 ? hold : exhale;
@@ -25,7 +28,7 @@
       phase = 'inhale';
       phaseSeconds = inhale;
     }
-    playAudio(phaseAudioKey[phase]);
+    if (!cancelled) playAudio(phaseAudioKey[phase]);
   }
 
   $effect(() => {
@@ -43,6 +46,7 @@
         running = true;
       } else if (introKey) {
         playAudio(`intro-${introKey}`).then(() => {
+          if (cancelled) return;
           playAudio(phaseAudioKey[phase]);
           running = true;
         });
@@ -56,6 +60,10 @@
   $effect(() => {
     if (!running) return;
     const tick = setInterval(() => {
+      if (cancelled) {
+        clearInterval(tick);
+        return;
+      }
       elapsed += 1;
       phaseSeconds -= 1;
       if (elapsed >= durationSeconds) {
@@ -66,6 +74,12 @@
       if (phaseSeconds <= 0) nextPhase();
     }, 1000);
     return () => clearInterval(tick);
+  });
+
+  onDestroy(() => {
+    cancelled = true;
+    stopAllAudio();
+    cancelSpeech();
   });
 
   const remaining = $derived(durationSeconds - elapsed);
