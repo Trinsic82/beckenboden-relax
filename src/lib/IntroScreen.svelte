@@ -20,11 +20,11 @@
     if (autoStartTimeout) clearTimeout(autoStartTimeout);
   });
 
-  function startExercise() {
+  async function startExercise() {
     if (started) return;
     started = true;
+    await playAudio(firstAudioKey);
     markInitialAudioPlayed(firstAudioKey);
-    void playAudio(firstAudioKey);
     void goto(nextHref);
   }
 </script>
