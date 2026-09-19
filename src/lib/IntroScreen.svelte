@@ -1,19 +1,29 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { markInitialAudioPlayed, playAudio } from '$lib/audio';
   import BackLink from '$lib/BackLink.svelte';
 
   let { title, description, introKey, firstAudioKey, nextHref } = $props();
-  let ready = $state(false);
+  let started = $state(false);
+  let autoStartTimeout: ReturnType<typeof setTimeout> | undefined;
 
   onMount(() => {
     playAudio(`intro-${introKey}`).then(() => {
-      ready = true;
+      if (started) return;
+      autoStartTimeout = setTimeout(() => {
+        startExercise();
+      }, 1000);
     });
   });
 
+  onDestroy(() => {
+    if (autoStartTimeout) clearTimeout(autoStartTimeout);
+  });
+
   function startExercise() {
+    if (started) return;
+    started = true;
     markInitialAudioPlayed(firstAudioKey);
     void playAudio(firstAudioKey);
     void goto(nextHref);
@@ -22,12 +32,10 @@
 
 <div class="page">
   <BackLink />
-  <h1>{title}</h1>
+  <h1>{title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{description}</p>
   <div class="pulse"></div>
-  {#if ready}
-    <button type="button" onclick={startExercise}>Übung starten</button>
-  {/if}
+  <button type="button" onclick={startExercise}>Übung starten</button>
 </div>
 
 <style>

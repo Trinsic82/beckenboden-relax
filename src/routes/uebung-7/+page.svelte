@@ -11,7 +11,7 @@
 </script>
 
 <div class="page">
-  <h1>{exercise.title}</h1>
+  <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{exercise.description}</p>
   <MetronomeSideSway tempoMs={700} durationSeconds={exercise.durationSeconds} onComplete={() => goto(getNextExerciseHref(6))} />
 </div>

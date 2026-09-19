@@ -20,7 +20,7 @@
 <div class="page">
   <BackLink />
   <SessionProgress reset={true} />
-  <h1>{exercise.title}</h1>
+  <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{exercise.description}</p>
   <BreathAnimation
     inhale={exercise.inhale}
