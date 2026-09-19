@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { speak, unlockSpeech } from '$lib/speech';
 
   let { onComplete = () => {} } = $props();
   let side = $state<'left' | 'right'>('left');
@@ -11,12 +12,18 @@
 
   const wait = (milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
 
+  function announce(step: string) {
+    unlockSpeech();
+    speak(step);
+  }
+
   async function command(key: string, milliseconds: number) {
     stepLabel = key === 'hand-linker-rippenbogen' ? 'Linke Hand am Rippenbogen' :
       key === 'hand-rechter-rippenbogen' ? 'Rechte Hand am Rippenbogen' :
       key === 'tief-einatmen' ? 'Tief einatmen' :
       key === 'ausatmen-tiefer-eindruecken' ? 'Ausatmen und tiefer eindrücken' :
       key === 'halten-10-sekunden' ? '10 Sekunden halten' : 'Weiter';
+    announce(stepLabel);
     await Promise.all([playAudio(key), wait(milliseconds)]);
   }
 
@@ -30,6 +37,7 @@
       await command('ausatmen-tiefer-eindruecken', 2000);
       await command('halten-10-sekunden', 10000);
       stepLabel = 'Kurze Pause';
+      announce(stepLabel);
       await wait(2000);
     }
   }
@@ -37,6 +45,7 @@
   async function run() {
     if (running) return;
     running = true;
+    announce('Bereit machen');
     const firstAudioAlreadyPlayed = consumeInitialAudioPlayed('hand-linker-rippenbogen');
     if (firstAudioAlreadyPlayed) {
       side = 'left';
@@ -48,6 +57,7 @@
         await command('ausatmen-tiefer-eindruecken', 2000);
         await command('halten-10-sekunden', 10000);
         stepLabel = 'Kurze Pause';
+        announce(stepLabel);
         await wait(2000);
       }
     } else {
