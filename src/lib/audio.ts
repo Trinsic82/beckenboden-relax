@@ -1,6 +1,7 @@
 const cache: Record<string, HTMLAudioElement> = {};
 let player: HTMLAudioElement | undefined;
 let stopActivePlayback: (() => void) | undefined;
+let playbackSession = 0;
 const INITIAL_AUDIO_STORAGE_KEY = 'beckenboden-relax-initial-audio';
 
 const ALL_KEYS = [
@@ -53,10 +54,29 @@ export function preloadAll() {
   }
 }
 
+export function stopAllAudio() {
+  playbackSession += 1;
+  stopActivePlayback?.();
+
+  if (typeof window === 'undefined') return;
+  if (player) {
+    player.pause();
+    player.currentTime = 0;
+    player.src = '';
+  }
+}
+
 export function playAudio(key: string): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve();
 
+  const session = playbackSession;
+
   return new Promise((resolve) => {
+    if (session !== playbackSession) {
+      resolve();
+      return;
+    }
+
     stopActivePlayback?.();
     const audio = getPlayer();
     audio.pause();
@@ -71,6 +91,10 @@ export function playAudio(key: string): Promise<void> {
       finish();
     };
     const finish = () => {
+      if (session !== playbackSession) {
+        resolve();
+        return;
+      }
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
       if (stopActivePlayback === finish) stopActivePlayback = undefined;
