@@ -5,6 +5,7 @@
   import { cancelSpeech } from '$lib/speech';
 
   let { title, description, introKey, firstAudioKey, nextHref } = $props();
+  const introImageSrc = `/image/intro-${introKey}.png`;
   let started = $state(false);
   let cancelled = false;
   let autoStartTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -41,15 +42,14 @@
 <div class="page">
   <h1>{title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{description}</p>
-  <div class="pulse"></div>
+  <img class="intro-image" src={introImageSrc} alt={title} />
   <button type="button" onclick={startExercise}>Übung starten</button>
 </div>
 
 <style>
   .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem; font-family: system-ui, sans-serif; }
   h1 { color: #f8fafc; font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; }
-  .desc { color: #94a3b8; max-width: 320px; text-align: center; margin-bottom: 2rem; }
-  .pulse { width: 60px; height: 60px; border-radius: 50%; background: #1e3a8a; animation: pulse 1.6s ease-in-out infinite; }
+  .desc { color: #94a3b8; max-width: 320px; text-align: center; margin-bottom: 1.5rem; }
+  .intro-image { width: min(70vw, 260px); max-height: 220px; object-fit: contain; border-radius: 18px; background: rgba(15, 23, 42, 0.5); box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45); }
   button { margin-top: 2rem; border: 0; border-radius: 8px; background: #1e3a8a; color: #f8fafc; padding: 0.9rem 2rem; font: inherit; font-weight: 600; cursor: pointer; }
-  @keyframes pulse { 0%,100% { transform: scale(0.8); opacity: 0.6; } 50% { transform: scale(1.15); opacity: 1; } }
 </style>
