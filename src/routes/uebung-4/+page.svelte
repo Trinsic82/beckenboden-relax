@@ -27,10 +27,12 @@
     durationSeconds={exercise.durationSeconds}
     onComplete={handleComplete}
   />
+  <button class="end-button" type="button" onclick={() => goto('/')}>Beenden</button>
 </div>
 
 <style>
   .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; font-family: system-ui, sans-serif; }
   h1 { color: #f8fafc; font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center; }
   .desc { color: #94a3b8; max-width: 320px; text-align: center; margin-bottom: 2rem; }
+  .end-button { margin-top: auto; border: 0; background: #1e3a8a; color: #f8fafc; padding: 0.9rem 2rem; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
 </style>
