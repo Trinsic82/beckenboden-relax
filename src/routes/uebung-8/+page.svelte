@@ -13,7 +13,7 @@
 <div class="page">
   <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
   <p class="desc">{exercise.description}</p>
-  <MetronomeBounce tempoMs={600} durationSeconds={exercise.durationSeconds} onComplete={() => goto(getNextExerciseHref(7))} />
+  <MetronomeBounce tempoMs={480} durationSeconds={exercise.durationSeconds} onComplete={() => goto(getNextExerciseHref(7))} />
 </div>
 
 <style>

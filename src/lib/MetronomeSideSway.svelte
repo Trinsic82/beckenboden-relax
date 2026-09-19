@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
 
-  let { tempoMs = 1100, durationSeconds = 120, onComplete = () => {} } = $props();
+  let { tempoMs = 880, durationSeconds = 120, onComplete = () => {} } = $props();
   let side = $state<'left' | 'right'>('left');
   let elapsed = $state(0);
   let running = $state(false);
