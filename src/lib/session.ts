@@ -1,4 +1,5 @@
 import { exercises } from './exercises';
+import { skipIntros } from './locale.svelte';
 
 export const totalSessionSeconds = exercises.reduce((sum, e) => sum + e.durationSeconds, 0);
 
@@ -28,7 +29,8 @@ export function getSelectedExerciseIndices(): number[] {
 export function getNextExerciseHref(currentIndex: number): string {
   const plan = getSelectedExerciseIndices();
   const nextIndex = plan[plan.indexOf(currentIndex) + 1];
-  return nextIndex === undefined ? '/abschluss' : `/uebung-${nextIndex + 1}-intro`;
+  if (nextIndex === undefined) return '/abschluss';
+  return skipIntros.value ? `/uebung-${nextIndex + 1}` : `/uebung-${nextIndex + 1}-intro`;
 }
 
 export function getTotalSessionSeconds(): number {

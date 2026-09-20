@@ -4,7 +4,7 @@
   import { exercises, type ExerciseCategory } from '$lib/exercises';
   import { unlockAudio, preloadAll } from '$lib/audio';
   import { setSelectedExerciseIndices } from '$lib/session';
-  import { locale } from '$lib/locale.svelte';
+  import { locale, skipIntros } from '$lib/locale.svelte';
   import { t } from '$lib/i18n';
 
   type ExerciseGroup = {
@@ -42,7 +42,7 @@
     unlockAudio();
     if (selectedIndices.length === 0) return;
     setSelectedExerciseIndices(selectedIndices);
-    void goto(`/uebung-${selectedIndices[0] + 1}-intro`);
+    void goto(skipIntros.value ? `/uebung-${selectedIndices[0] + 1}` : `/uebung-${selectedIndices[0] + 1}-intro`);
   }
 
   function toggleExercise(index: number) {
