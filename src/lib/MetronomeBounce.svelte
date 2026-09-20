@@ -2,6 +2,8 @@
   import { onDestroy, onMount } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech } from '$lib/speech';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { tempoMs = 480, durationSeconds = 75, onComplete = () => {} } = $props();
   let position = $state<'up' | 'down'>('down');
@@ -49,7 +51,7 @@
 
 <div class="wrapper">
   <div class="bounce" class:up={position === 'up'}><span></span></div>
-  <p class="label">Becken {position === 'up' ? 'heben' : 'fallen lassen'}</p>
+  <p class="label">{position === 'up' ? t[locale.value].pelvisUp : t[locale.value].pelvisDown}</p>
   <p class="timer">{Math.floor(remaining / 60)}:{Math.floor(remaining % 60).toString().padStart(2, '0')}</p>
 </div>
 

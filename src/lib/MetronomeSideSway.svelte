@@ -2,6 +2,8 @@
   import { onDestroy, onMount } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech } from '$lib/speech';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { tempoMs = 880, durationSeconds = 120, onComplete = () => {} } = $props();
   let position = $state<'left' | 'right'>('left');
@@ -49,7 +51,7 @@
 
 <div class="wrapper">
   <div class="pendulum" class:left={position === 'left'} class:right={position === 'right'}><span></span></div>
-  <p class="label">Knie nach {position === 'left' ? 'links' : 'rechts'}</p>
+  <p class="label">{position === 'left' ? t[locale.value].kneeLeft : t[locale.value].kneeRight}</p>
   <p class="timer">{Math.floor(remaining / 60)}:{Math.floor(remaining % 60).toString().padStart(2, '0')}</p>
 </div>
 

@@ -1,4 +1,9 @@
-<a href="/" class="back">← Zurück zur Übersicht</a>
+<script lang="ts">
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
+</script>
+
+<a href="/" class="back">← {t[locale.value].backToOverview}</a>
 
 <style>
   .back {

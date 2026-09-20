@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { getSessionStart, getTotalSessionSeconds } from '$lib/session';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { reset = false } = $props();
 
@@ -28,8 +30,8 @@
 </script>
 
 <div class="session-bar">
-  <span>Trainiert: {elapsedM}:{elapsedS.toString().padStart(2, '0')}</span>
-  <span>Verbleibend: {remainingM}:{remainingS.toString().padStart(2, '0')}</span>
+  <span>{t[locale.value].trained}: {elapsedM}:{elapsedS.toString().padStart(2, '0')}</span>
+  <span>{t[locale.value].remaining}: {remainingM}:{remainingS.toString().padStart(2, '0')}</span>
 </div>
 
 <style>

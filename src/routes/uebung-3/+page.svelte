@@ -3,6 +3,8 @@
   import WaveBreath from '$lib/WaveBreath.svelte';
   import SessionProgress from '$lib/SessionProgress.svelte';
   import { exercises } from '$lib/exercises';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
   import { setupWakeLock } from '$lib/wakeLock';
   import { goto } from '$app/navigation';
   import { getNextExerciseHref } from '$lib/session';
@@ -18,8 +20,8 @@
 
 <div class="page">
   <SessionProgress />
-  <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
-  <p class="desc">{exercise.description}</p>
+  <h1>{exercise.title[locale.value]}</h1>
+  <p class="desc">{exercise.description[locale.value]}</p>
   <WaveBreath
     inhale={exercise.inhale}
     hold={exercise.hold}
@@ -27,7 +29,7 @@
     durationSeconds={exercise.durationSeconds}
     onComplete={handleComplete}
   />
-  <button class="end-button" type="button" onclick={() => goto('/')}>Beenden</button>
+  <button class="end-button" type="button" onclick={() => goto('/')}>{t[locale.value].end}</button>
 </div>
 
 <style>

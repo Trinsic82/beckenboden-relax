@@ -2,11 +2,13 @@
   import { onDestroy, onMount } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech, speak, unlockSpeech } from '$lib/speech';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { onComplete = () => {} } = $props();
   let side = $state<'left' | 'right'>('left');
   let repetition = $state(1);
-  let stepLabel = $state('Bereit machen');
+  let stepLabel = $state(t[locale.value].ready);
   let running = $state(false);
   let cancelled = false;
 
@@ -19,11 +21,11 @@
 
   async function command(key: string, milliseconds: number) {
     if (cancelled) return;
-    stepLabel = key === 'hand-linker-rippenbogen' ? 'Linke Hand am Rippenbogen' :
-      key === 'hand-rechter-rippenbogen' ? 'Rechte Hand am Rippenbogen' :
-      key === 'tief-einatmen' ? 'Tief einatmen' :
-      key === 'ausatmen-tiefer-eindruecken' ? 'Ausatmen und tiefer eindrücken' :
-      key === 'halten-10-sekunden' ? '10 Sekunden halten' : 'Weiter';
+    stepLabel = key === 'hand-linker-rippenbogen' ? t[locale.value].prepareLeft :
+      key === 'hand-rechter-rippenbogen' ? t[locale.value].prepareRight :
+      key === 'tief-einatmen' ? t[locale.value].deepInhale :
+      key === 'ausatmen-tiefer-eindruecken' ? t[locale.value].pressDeeper :
+      key === 'halten-10-sekunden' ? t[locale.value].holdTen : t[locale.value].done;
     announce(stepLabel);
     await Promise.all([playAudio(key), wait(milliseconds)]);
     if (cancelled) return;
@@ -43,7 +45,7 @@
       if (cancelled) return;
       await command('halten-10-sekunden', 10000);
       if (cancelled) return;
-      stepLabel = 'Kurze Pause';
+      stepLabel = t[locale.value].shortPause;
       announce(stepLabel);
       await wait(2000);
       if (cancelled) return;
@@ -53,7 +55,7 @@
   async function run() {
     if (running || cancelled) return;
     running = true;
-    announce('Bereit machen');
+    announce(t[locale.value].ready);
     const firstAudioAlreadyPlayed = consumeInitialAudioPlayed('hand-linker-rippenbogen');
     if (firstAudioAlreadyPlayed) {
       side = 'left';
@@ -68,7 +70,7 @@
         if (cancelled) return;
         await command('halten-10-sekunden', 10000);
         if (cancelled) return;
-        stepLabel = 'Kurze Pause';
+        stepLabel = t[locale.value].shortPause;
         announce(stepLabel);
         await wait(2000);
         if (cancelled) return;
@@ -81,7 +83,7 @@
     if (cancelled) return;
     await runSide('right');
     if (cancelled) return;
-    stepLabel = 'Fertig';
+    stepLabel = t[locale.value].done;
     await playAudio('fertig');
     if (cancelled) return;
     onComplete();
@@ -101,7 +103,7 @@
 <div class="wrapper">
   <div class="hands" aria-hidden="true"><span class:left={side === 'left'}>L</span><span class:right={side === 'right'}>R</span></div>
   <p class="label">{stepLabel}</p>
-  <p class="counter">Wiederholung {repetition} von 3 · {side === 'left' ? 'linke' : 'rechte'} Seite</p>
+  <p class="counter">{t[locale.value].repetition} {repetition} {t[locale.value].of} 3 · {side === 'left' ? t[locale.value].left : t[locale.value].right}</p>
 </div>
 
 <style>
