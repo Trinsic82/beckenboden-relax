@@ -3,6 +3,8 @@
   import { goto } from '$app/navigation';
   import { markInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech } from '$lib/speech';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { title, description, introKey, firstAudioKey, nextHref } = $props();
   const introImageSrc = `/image/intro-${introKey}.png`;
@@ -40,10 +42,10 @@
 </script>
 
 <div class="page">
-  <h1>{title.replace(/^Übung \d+: /, '')}</h1>
+  <h1>{title.replace(/^Übung \d+: |^Exercise \d+: /, '')}</h1>
   <p class="desc">{description}</p>
   <img class="intro-image" src={introImageSrc} alt={title} />
-  <button type="button" onclick={startExercise}>Übung starten</button>
+  <button type="button" onclick={startExercise}>{t[locale.value].startExercise}</button>
 </div>
 
 <style>

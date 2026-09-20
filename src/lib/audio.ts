@@ -3,6 +3,7 @@ let player: HTMLAudioElement | undefined;
 let stopActivePlayback: (() => void) | undefined;
 let playbackSession = 0;
 const INITIAL_AUDIO_STORAGE_KEY = 'beckenboden-relax-initial-audio';
+import { locale } from './locale.svelte';
 
 const ALL_KEYS = [
   'einatmen',
@@ -30,11 +31,12 @@ const ALL_KEYS = [
 ];
 
 function getAudio(key: string): HTMLAudioElement {
-  let audio = cache[key];
+  const cacheKey = `${locale.value}-${key}`;
+  let audio = cache[cacheKey];
   if (!audio) {
-    audio = new Audio(`/audio/${key}.mp3`);
+    audio = new Audio(`/audio/${locale.value}/${key}.mp3`);
     audio.preload = 'auto';
-    cache[key] = audio;
+    cache[cacheKey] = audio;
   }
   return audio;
 }
@@ -82,7 +84,7 @@ export function playAudio(key: string): Promise<void> {
     const audio = getPlayer();
     audio.pause();
     audio.currentTime = 0;
-    audio.src = `/audio/${key}.mp3`;
+    audio.src = `/audio/${locale.value}/${key}.mp3`;
     audio.volume = 1;
 
     const onEnded = () => {
@@ -127,7 +129,7 @@ export function consumeInitialAudioPlayed(key: string): boolean {
 export function unlockAudio() {
   if (typeof window === 'undefined') return;
   const a = getPlayer();
-  const source = '/audio/einatmen.mp3';
+  const source = `/audio/${locale.value}/einatmen.mp3`;
   a.src = source;
   a.volume = 0;
   a.load();

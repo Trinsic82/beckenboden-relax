@@ -30,7 +30,9 @@ Drei unterschiedliche Übungsmethodiken kommen zum Einsatz:
 
 - **Framework:** SvelteKit (TypeScript)
 - **Audio-System** (`src/lib/audio.ts`): Verwaltet alle Sprachansagen und Klänge über gecachte `HTMLAudioElement`-Objekte, inklusive Preloading beim App-Start und einem Unlock-Mechanismus für iOS-Autoplay-Beschränkungen
-- **Übungsdaten** (`src/lib/exercises.ts`): Zentrale Definition aller Übungen mit Titel, Beschreibung und Timing-Werten
+- **Mehrsprachigkeit** (`src/lib/locale.svelte.ts`, `src/lib/i18n.ts`): Deutsch und Englisch werden automatisch anhand der Systemsprache gewählt und die manuelle Auswahl in `localStorage` gespeichert
+- **Übungsdaten** (`src/lib/exercises.ts`): Zentrale Definition aller Übungen mit lokalisierten Titeln, Beschreibungen und Timing-Werten
+- **Audio-Sprachen** (`static/audio/de` und `static/audio/en`): Audiodateien werden je Sprache geladen; fehlende englische Dateien werden sicher als stumme Ansage behandelt, bis sie nachgeliefert werden
 - **Deployment:** Docker-Container auf einem Homeserver (Proxmox/LXC), Build über `Dockerfile` und `docker-compose.yml`
 
 ## Entwicklung

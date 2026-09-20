@@ -1,6 +1,8 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { contract = 3, hold = 3, exhale = 13, durationSeconds = 90, introKey = '', onComplete = () => {} } = $props();
   const release = exhale;
@@ -13,7 +15,7 @@
   let hasStarted = false;
   let running = $state(false);
 
-  const phaseLabel = { contract: 'Sanft anspannen', hold: 'Halten', release: 'Loslassen und sinken lassen' };
+  const phaseLabel = { contract: 'gentlyTense', hold: 'hold', release: 'releaseAndSink' } as const;
   const phaseAudioKey = { contract: 'anspannen', hold: 'halten', release: 'loslassen' };
 
   function nextPhase() {
@@ -80,7 +82,7 @@
   <div class="track">
     <div class="drop" style="transform: translateY({translateY}px); opacity: {opacity}; transition-duration: {transitionDuration}s;"></div>
   </div>
-  <p class="label">{phaseLabel[phase]} …</p>
+  <p class="label">{t[locale.value][phaseLabel[phase]]} …</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 

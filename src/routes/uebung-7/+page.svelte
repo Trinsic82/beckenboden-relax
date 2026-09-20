@@ -4,6 +4,8 @@
   import MetronomeSideSway from '$lib/MetronomeSideSway.svelte';
   import SessionProgress from '$lib/SessionProgress.svelte';
   import { exercises } from '$lib/exercises';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
   import { setupWakeLock } from '$lib/wakeLock';
   import { getNextExerciseHref } from '$lib/session';
   import { stopAllAudio } from '$lib/audio';
@@ -15,8 +17,8 @@
 
 <div class="page">
   <SessionProgress />
-  <h1>{exercise.title.replace(/^Übung \d+: /, '')}</h1>
-  <p class="desc">{exercise.description}</p>
+  <h1>{exercise.title[locale.value]}</h1>
+  <p class="desc">{exercise.description[locale.value]}</p>
   <MetronomeSideSway tempoMs={560} durationSeconds={exercise.durationSeconds} onComplete={() => {
     stopAllAudio();
     cancelSpeech();
@@ -26,7 +28,7 @@
     stopAllAudio();
     cancelSpeech();
     goto('/');
-  }}>Beenden</button>
+  }}>{t[locale.value].end}</button>
 </div>
 
 <style>

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
+
   let { contract = 4, hold = 0, exhale = 7, durationSeconds = 180, onComplete = () => {} } = $props();
   const release = exhale;
 
@@ -7,7 +10,7 @@
   let elapsed = $state(0);
   let openAmount = $state(0.35);
 
-  const phaseLabel = { contract: 'Sanft anspannen …', hold: 'Halten …', release: 'Ganz langsam loslassen …' };
+  const phaseLabel = { contract: 'gentlyTense', hold: 'hold', release: 'release' } as const;
   const petalAngles = [0, 60, 120, 180, 240, 300];
 
   function nextPhase() {
@@ -61,7 +64,7 @@
     {/each}
     <div class="center"></div>
   </div>
-  <p class="label">{phaseLabel[phase]}</p>
+  <p class="label">{t[locale.value][phaseLabel[phase]]} …</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 

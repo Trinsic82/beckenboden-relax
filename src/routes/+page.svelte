@@ -4,6 +4,8 @@
   import { exercises, type ExerciseCategory } from '$lib/exercises';
   import { unlockAudio, preloadAll } from '$lib/audio';
   import { setSelectedExerciseIndices } from '$lib/session';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   type ExerciseGroup = {
     category: ExerciseCategory;
@@ -13,8 +15,14 @@
   let selectedIndices = $state<number[]>([]);
 
   const categoryOrder: ExerciseCategory[] = ['Trigger', 'Atmen', 'Lockern', 'Anspannung'];
-  const exerciseName = (title: string) => title.replace(/^Übung \d+: /, '');
-  const formatDuration = (seconds: number) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')} Min.`;
+  const exerciseName = (title: string) => title.replace(/^Übung \d+: |^Exercise \d+: /, '');
+  const formatDuration = (seconds: number) => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')} ${t[locale.value].minutes}`;
+  const categoryLabel = (category: ExerciseCategory) => ({
+    Trigger: t[locale.value].categoryTrigger,
+    Atmen: t[locale.value].categoryBreathing,
+    Lockern: t[locale.value].categoryRelax,
+    Anspannung: t[locale.value].categoryTension
+  })[category];
   const totalSeconds = $derived(selectedIndices.reduce((total, index) => total + exercises[index].durationSeconds, 0));
   const totalLabel = $derived(formatDuration(totalSeconds));
   const groups = $derived.by(() =>
@@ -47,17 +55,19 @@
 <div class="page">
   <h1>Beckenboden Relax</h1>
 
-  <p class="hint">Wähle deine Übungen in der gewünschten Reihenfolge.</p>
+  <p class="hint">{t[locale.value].hint}</p>
+
+  <a class="settings" href="/einstellungen">⚙ {t[locale.value].settings}</a>
 
   <div class="groups">
     {#each groups as group}
       <div class="group">
-        <h2>{group.category}</h2>
+        <h2>{categoryLabel(group.category)}</h2>
 
         <div class="list">
           {#each group.exercises as exercise}
             <button class:selected={selectedIndices.includes(exercise.originalIndex)} type="button" onclick={() => toggleExercise(exercise.originalIndex)}>
-              <span>{exerciseName(exercise.title)}</span>
+              <span>{exerciseName(exercise.title[locale.value])}</span>
               <span class="duration">{formatDuration(exercise.durationSeconds)}</span>
             </button>
           {/each}
@@ -67,17 +77,18 @@
   </div>
 
   <div class="summary">
-    <span>{selectedIndices.length} {selectedIndices.length === 1 ? 'Übung' : 'Übungen'} ausgewählt</span>
-    <strong>Gesamt: {totalLabel}</strong>
+    <span>{selectedIndices.length} {selectedIndices.length === 1 ? t[locale.value].exercise : t[locale.value].exercises} {t[locale.value].selected}</span>
+    <strong>{t[locale.value].total}: {totalLabel}</strong>
   </div>
 
-  <button class="start" type="button" disabled={selectedIndices.length === 0} onclick={handleStart}>Session starten</button>
+  <button class="start" type="button" disabled={selectedIndices.length === 0} onclick={handleStart}>{t[locale.value].startSession}</button>
 </div>
 
 <style>
   .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; padding: 3rem 1.5rem; font-family: system-ui, sans-serif; gap: 1rem; }
   h1 { color: #f8fafc; font-size: 1.8rem; }
   .hint { color: #94a3b8; text-align: center; margin: 0 0 .5rem; }
+  .settings { color: #94a3b8; font-size: .9rem; text-decoration: none; align-self: flex-end; width: 100%; max-width: 360px; text-align: right; }
   .groups { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 1rem; }
   .group { display: flex; flex-direction: column; gap: 0.5rem; }
   h2 { margin: 0; color: #f8fafc; font-size: 1rem; font-weight: 700; }

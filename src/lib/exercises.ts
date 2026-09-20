@@ -2,8 +2,8 @@ export type ExerciseCategory = 'Trigger' | 'Atmen' | 'Lockern' | 'Anspannung';
 
 export type Exercise = {
   id: string;
-  title: string;
-  description: string;
+  title: { de: string; en: string };
+  description: { de: string; en: string };
   category: ExerciseCategory;
   inhale: number;
   hold: number;
@@ -14,8 +14,8 @@ export type Exercise = {
 export const exercises: Exercise[] = [
   {
     id: 'zwerchfellatmung',
-    title: 'Übung 1: Zwerchfellatmung',
-    description: 'Lege eine Hand auf den Bauch. Atme ruhig in den Bauch hinein, nicht in den Brustkorb.',
+    title: { de: 'Übung 1: Zwerchfellatmung', en: 'Exercise 1: Diaphragmatic Breathing' },
+    description: { de: 'Lege eine Hand auf den Bauch. Atme ruhig in den Bauch hinein, nicht in den Brustkorb.', en: 'Place one hand on your belly. Breathe calmly into your belly, not your chest.' },
     category: 'Atmen',
     inhale: 4,
     hold: 0,
@@ -24,8 +24,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'wellen-loslassen',
-    title: 'Übung 2: Wellen-Loslassen',
-    description: 'Spanne minimal an, halte kurz, und lass dann los, als würde eine Welle die Spannung mit sich fortziehen.',
+    title: { de: 'Übung 2: Wellen-Loslassen', en: 'Exercise 2: Wave Release' },
+    description: { de: 'Spanne minimal an, halte kurz, und lass dann los, als würde eine Welle die Spannung mit sich fortziehen.', en: 'Tense slightly, hold briefly, then release, as if a wave carried the tension away.' },
     category: 'Anspannung',
     inhale: 3,
     hold: 3,
@@ -34,8 +34,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'reverse-kegel',
-    title: 'Übung 3: Reverse Kegel',
-    description: 'Stelle dir vor, wie sich der Beckenboden beim Ausatmen sanft öffnet und nach unten sinkt, statt sich anzuspannen.',
+    title: { de: 'Übung 3: Reverse Kegel', en: 'Exercise 3: Reverse Kegel' },
+    description: { de: 'Stelle dir vor, wie sich der Beckenboden beim Ausatmen sanft öffnet und nach unten sinkt, statt sich anzuspannen.', en: 'Imagine your pelvic floor gently opening and sinking down as you exhale, instead of tensing.' },
     category: 'Anspannung',
     inhale: 4,
     hold: 2,
@@ -44,8 +44,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'anspannen-loslassen',
-    title: 'Übung 4: Anspannen & Loslassen',
-    description: 'Spanne den Beckenboden nur leicht an (ca. 30% Kraft), halte kurz, und lass dann bewusst lange und vollständig los.',
+    title: { de: 'Übung 4: Anspannen & Loslassen', en: 'Exercise 4: Tense & Release' },
+    description: { de: 'Spanne den Beckenboden nur leicht an (ca. 30% Kraft), halte kurz, und lass dann bewusst lange und vollständig los.', en: 'Tense your pelvic floor only lightly (about 30% effort), hold briefly, then consciously release fully and slowly.' },
     category: 'Anspannung',
     inhale: 4,
     hold: 2,
@@ -54,8 +54,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: '4-7-8-atmung',
-    title: 'Übung 5: 4-7-8-Atmung',
-    description: 'Atme 4 Sekunden durch die Nase ein, halte 7 Sekunden, atme 8 Sekunden langsam durch den Mund aus.',
+    title: { de: 'Übung 5: 4-7-8-Atmung', en: 'Exercise 5: 4-7-8 Breathing' },
+    description: { de: 'Atme 4 Sekunden durch die Nase ein, halte 7 Sekunden, atme 8 Sekunden langsam durch den Mund aus.', en: 'Inhale through your nose for 4 seconds, hold for 7 seconds, exhale slowly through your mouth for 8 seconds.' },
     category: 'Atmen',
     inhale: 4,
     hold: 7,
@@ -64,8 +64,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'zwerchfell-triggern',
-    title: 'Übung 6: Zwerchfell-Triggerung',
-    description: 'Trigger dein Zwerchfell abwechselnd links und rechts am Rippenbogen mit ruhiger, geführter Anleitung.',
+    title: { de: 'Übung 6: Zwerchfell-Triggerung', en: 'Exercise 6: Diaphragm Triggering' },
+    description: { de: 'Trigger dein Zwerchfell abwechselnd links und rechts am Rippenbogen mit ruhiger, geführter Anleitung.', en: 'Place your hand on your rib arch, breathe in, and as you exhale press a little deeper and hold for ten seconds. Repeat three times per side.' },
     category: 'Trigger',
     inhale: 4,
     hold: 10,
@@ -74,8 +74,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'knie-wackeln',
-    title: 'Übung 7: Knie wackeln',
-    description: 'Lege dich auf den Rücken, halte die Knie zusammen und wackle zwei Minuten lang ruhig im Takt nach links und rechts.',
+    title: { de: 'Übung 7: Knie wackeln', en: 'Exercise 7: Knee Rocking' },
+    description: { de: 'Lege dich auf den Rücken, halte die Knie zusammen und wackle zwei Minuten lang ruhig im Takt nach links und rechts.', en: 'Lie on your back with knees bent together, gently rocking them left and right in rhythm for two minutes.' },
     category: 'Lockern',
     inhale: 0,
     hold: 0,
@@ -84,8 +84,8 @@ export const exercises: Exercise[] = [
   },
   {
     id: 'becken-trampolin',
-    title: 'Übung 8: Becken-Trampolin',
-    description: 'Hebe dein Becken leicht an und fedre es in einem schnellen, gleichmäßigen Takt wieder ab.',
+    title: { de: 'Übung 8: Becken-Trampolin', en: 'Exercise 8: Pelvic Bounce' },
+    description: { de: 'Hebe dein Becken leicht an und fedre es in einem schnellen, gleichmäßigen Takt wieder ab.', en: 'Lie on your back with knees bent, lifting your hips slightly and bouncing them rhythmically like on a trampoline.' },
     category: 'Lockern',
     inhale: 0,
     hold: 0,

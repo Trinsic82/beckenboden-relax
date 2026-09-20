@@ -2,6 +2,8 @@
   import { onDestroy, untrack } from 'svelte';
   import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech } from '$lib/speech';
+  import { locale } from '$lib/locale.svelte';
+  import { t } from '$lib/i18n';
 
   let { inhale = 4, hold = 2, exhale = 7, durationSeconds = 90, introKey = '', onComplete = () => {} } = $props();
 
@@ -13,7 +15,7 @@
   let running = $state(false);
   let cancelled = false;
 
-  const phaseLabel = { inhale: 'Einatmen', hold: 'Halten', exhale: 'Loslassen' };
+  const phaseLabel = { inhale: 'inhale', hold: 'hold', exhale: 'release' } as const;
   const phaseAudioKey = { inhale: 'einatmen', hold: 'halten', exhale: 'loslassen' };
   const bars = [0, 1, 2, 3, 4, 5, 6];
 
@@ -100,7 +102,7 @@
       <div class="bar" style="height: {barHeight(i)}px; transition-duration: {transitionDuration}s;"></div>
     {/each}
   </div>
-  <p class="label">{phaseLabel[phase]} …</p>
+  <p class="label">{t[locale.value][phaseLabel[phase]]} …</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 
