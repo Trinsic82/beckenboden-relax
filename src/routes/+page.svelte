@@ -53,11 +53,10 @@
 </script>
 
 <div class="page">
+  <a class="settings" href="/einstellungen" aria-label={t[locale.value].settings} title={t[locale.value].settings}>⚙</a>
   <h1>Beckenboden Relax</h1>
 
   <p class="hint">{t[locale.value].hint}</p>
-
-  <a class="settings" href="/einstellungen">⚙ {t[locale.value].settings}</a>
 
   <div class="groups">
     {#each groups as group}
@@ -85,10 +84,11 @@
 </div>
 
 <style>
-  .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; padding: 3rem 1.5rem; font-family: system-ui, sans-serif; gap: 1rem; }
+  .page { min-height: 100vh; background: #0f172a; display: flex; flex-direction: column; align-items: center; padding: 3rem 1.5rem; font-family: system-ui, sans-serif; gap: 1rem; position: relative; }
   h1 { color: #f8fafc; font-size: 1.8rem; }
   .hint { color: #94a3b8; text-align: center; margin: 0 0 .5rem; }
-  .settings { color: #94a3b8; font-size: .9rem; text-decoration: none; align-self: flex-end; width: 100%; max-width: 360px; text-align: right; }
+  .settings { position: absolute; top: 1rem; left: 1rem; color: #94a3b8; font-size: 1.4rem; line-height: 1; text-decoration: none; }
+  .settings:hover, .settings:focus-visible { color: #f8fafc; }
   .groups { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 1rem; }
   .group { display: flex; flex-direction: column; gap: 0.5rem; }
   h2 { margin: 0; color: #f8fafc; font-size: 1rem; font-weight: 700; }
