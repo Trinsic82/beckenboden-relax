@@ -5,7 +5,7 @@
   import { locale } from '$lib/locale.svelte';
   import { t } from '$lib/i18n';
 
-  let { inhale = 4, hold = 0, exhale = 6, durationSeconds = 180, introKey = '', onComplete = () => {} } = $props();
+  let { inhale = 4, hold = 0, exhale = 6, durationSeconds = 180, preparationLabel = '', onComplete = () => {} } = $props();
 
   let phase = $state<'inhale' | 'hold' | 'exhale'>('inhale');
   let phaseSeconds = $state(untrack(() => inhale));
@@ -13,6 +13,7 @@
   let scale = $state(0.6);
   let hasStarted = false;
   let running = $state(false);
+  let preparing = $state(true);
   let cancelled = false;
 
   const phaseLabel = { inhale: 'inhale', hold: 'hold', exhale: 'exhale' } as const;
@@ -44,18 +45,12 @@
   $effect(() => {
     if (!hasStarted) {
       hasStarted = true;
-      if (consumeInitialAudioPlayed(phaseAudioKey[phase])) {
+      setTimeout(() => {
+        if (cancelled) return;
+        preparing = false;
+        void playAudio(phaseAudioKey[phase]);
         running = true;
-      } else if (introKey) {
-        playAudio(`intro-${introKey}`).then(() => {
-          if (cancelled) return;
-          playAudio(phaseAudioKey[phase]);
-          running = true;
-        });
-      } else {
-        playAudio(phaseAudioKey[phase]);
-        running = true;
-      }
+      }, 1000);
     }
   });
 
@@ -94,7 +89,7 @@
     class="circle"
     style="transform: scale({scale}); transition-duration: {phase === 'inhale' ? inhale : phase === 'hold' ? 0.3 : exhale}s;"
   ></div>
-  <p class="label">{t[locale.value][phaseLabel[phase]]} …</p>
+  <p class="label">{preparing ? preparationLabel : `${t[locale.value][phaseLabel[phase]]} …`}</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 

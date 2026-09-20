@@ -27,6 +27,7 @@
     hold={exercise.hold}
     exhale={exercise.exhale}
     durationSeconds={exercise.durationSeconds}
+    preparationLabel={t[locale.value].prepareTense}
     onComplete={handleComplete}
   />
   <button class="end-button" type="button" onclick={() => goto('/')}>{t[locale.value].end}</button>

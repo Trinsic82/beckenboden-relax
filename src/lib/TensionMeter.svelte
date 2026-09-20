@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
-  import { consumeInitialAudioPlayed, playAudio } from '$lib/audio';
+  import { onDestroy, untrack } from 'svelte';
+  import { playAudio, stopAllAudio } from '$lib/audio';
   import { locale } from '$lib/locale.svelte';
   import { t } from '$lib/i18n';
 
-  let { contract = 4, hold = 2, exhale = 9, durationSeconds = 90, introKey = '', onComplete = () => {} } = $props();
+  let { contract = 4, hold = 2, exhale = 9, durationSeconds = 90, preparationLabel = '', onComplete = () => {} } = $props();
   const release = exhale;
 
   let phase = $state<'contract' | 'hold' | 'release'>('contract');
@@ -13,6 +13,8 @@
   let fill = $state(0);
   let hasStarted = false;
   let running = $state(false);
+  let preparing = $state(true);
+  let cancelled = false;
 
   const phaseLabel = { contract: 'tense', hold: 'hold', release: 'relax' } as const;
   const phaseAudioKey = { contract: 'anspannen', hold: 'halten', release: 'loslassen' };
@@ -42,17 +44,12 @@
   $effect(() => {
     if (!hasStarted) {
       hasStarted = true;
-      if (consumeInitialAudioPlayed(phaseAudioKey[phase])) {
+      setTimeout(() => {
+        if (cancelled) return;
+        preparing = false;
+        void playAudio(phaseAudioKey[phase]);
         running = true;
-      } else if (introKey) {
-        playAudio(`intro-${introKey}`).then(() => {
-          playAudio(phaseAudioKey[phase]);
-          running = true;
-        });
-      } else {
-        playAudio(phaseAudioKey[phase]);
-        running = true;
-      }
+      }, 1000);
     }
   });
 
@@ -75,13 +72,18 @@
   const minutes = $derived(Math.floor(remaining / 60));
   const seconds = $derived(remaining % 60);
   const transitionDuration = $derived(phase === 'contract' ? contract : phase === 'hold' ? 0.2 : release);
+
+  onDestroy(() => {
+    cancelled = true;
+    stopAllAudio();
+  });
 </script>
 
 <div class="wrapper">
   <div class="meter">
     <div class="fill" style="height:{fill}%; transition-duration:{transitionDuration}s;"></div>
   </div>
-  <p class="label">{t[locale.value][phaseLabel[phase]]} …</p>
+  <p class="label">{preparing ? preparationLabel : `${t[locale.value][phaseLabel[phase]]} …`}</p>
   <p class="timer">{minutes}:{seconds.toString().padStart(2, '0')}</p>
 </div>
 

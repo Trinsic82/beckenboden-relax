@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { consumeInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
+  import { playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech } from '$lib/speech';
   import { locale } from '$lib/locale.svelte';
   import { t } from '$lib/i18n';
 
-  let { tempoMs = 880, durationSeconds = 120, onComplete = () => {} } = $props();
+  let { tempoMs = 880, durationSeconds = 120, preparationLabel = '', onComplete = () => {} } = $props();
   let position = $state<'left' | 'right'>('left');
   let elapsed = $state(0);
   let running = $state(false);
@@ -33,11 +33,10 @@
     }, tempoMs);
   }
 
-  onMount(async () => {
-    if (consumeInitialAudioPlayed('tick')) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-    start();
+  onMount(() => {
+    setTimeout(() => {
+      if (!cancelled) start();
+    }, 1000);
   });
 
   onDestroy(() => {
@@ -51,7 +50,7 @@
 
 <div class="wrapper">
   <div class="pendulum" class:left={position === 'left'} class:right={position === 'right'}><span></span></div>
-  <p class="label">{position === 'left' ? t[locale.value].kneeLeft : t[locale.value].kneeRight}</p>
+  <p class="label">{elapsed === 0 ? preparationLabel : position === 'left' ? t[locale.value].kneeLeft : t[locale.value].kneeRight}</p>
   <p class="timer">{Math.floor(remaining / 60)}:{Math.floor(remaining % 60).toString().padStart(2, '0')}</p>
 </div>
 
