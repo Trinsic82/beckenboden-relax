@@ -3,7 +3,7 @@
   import { goto } from '$app/navigation';
   import { markInitialAudioPlayed, playAudio, stopAllAudio } from '$lib/audio';
   import { cancelSpeech } from '$lib/speech';
-  import { locale } from '$lib/locale.svelte';
+  import { locale, skipIntros } from '$lib/locale.svelte';
   import { t } from '$lib/i18n';
 
   let { title, description, introKey, firstAudioKey, nextHref } = $props();
@@ -13,6 +13,10 @@
   let autoStartTimeout: ReturnType<typeof setTimeout> | undefined;
 
   onMount(() => {
+    if (skipIntros.value) {
+      void goto(nextHref);
+      return;
+    }
     playAudio(`intro-${introKey}`).then(() => {
       if (started || cancelled) return;
       autoStartTimeout = setTimeout(() => {
