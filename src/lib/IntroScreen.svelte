@@ -40,7 +40,6 @@
       autoStartTimeout = undefined;
     }
     markInitialAudioPlayed(firstAudioKey);
-    void playAudio(firstAudioKey);
     void goto(nextHref);
   }
 </script>
