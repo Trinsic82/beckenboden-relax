@@ -19,7 +19,7 @@
   <SessionProgress />
   <h1>{exercise.title[locale.value]}</h1>
   <p class="desc">{exercise.description[locale.value]}</p>
-  <MetronomeSideSway tempoMs={560} durationSeconds={exercise.durationSeconds} onComplete={() => {
+  <MetronomeSideSway tempoMs={560} durationSeconds={exercise.durationSeconds} preparationLabel={t[locale.value].prepareKnees} onComplete={() => {
     stopAllAudio();
     cancelSpeech();
     goto(getNextExerciseHref(6));
